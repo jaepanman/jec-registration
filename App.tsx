@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   RegistrationFormData, 
@@ -18,10 +17,10 @@ import StepIndicator from './components/StepIndicator';
 
 /**
  * Configuration
- * Vite requires environment variables to be prefixed with VITE_ to be exposed to the client.
+ * Vite injects environment variables into import.meta.env.
+ * Using optional chaining prevents crashes if import.meta.env is undefined.
  */
-// Fix: Use process.env to access environment variables instead of import.meta.env to resolve TypeScript 'ImportMeta' missing 'env' property error.
-const GOOGLE_SCRIPT_URL = process.env.VITE_GOOGLE_SCRIPT_URL || '';
+const GOOGLE_SCRIPT_URL = (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL || '';
 const SECURITY_TOKEN = 'jec_secure_2024_access';
 
 const INITIAL_FORM_DATA: RegistrationFormData = {
