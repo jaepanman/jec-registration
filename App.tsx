@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   RegistrationFormData, 
@@ -173,6 +174,7 @@ const App: React.FC = () => {
           {step === 2 && <GuardianForm formData={formData} updateFormData={updateFormData} onNext={handleNext} onBack={handleBack} />}
           {step === 3 && (
             <StudentPreferenceForm
+              key={formData.students[studentPrefIndex].id}
               student={formData.students[studentPrefIndex]}
               studentIndex={studentPrefIndex}
               totalStudents={formData.students.length}
