@@ -93,9 +93,11 @@ const App: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      // Create separate columns for days Monday-Saturday
+      // Prepare payload with explicit fields for Google Sheets
       const transformedStudents = formData.students.map(s => ({
         ...s,
+        yearsStudied: s.yearsStudied || '-',
+        lastYearLevel: s.lastYearLevel || '-',
         monday: (s.schedule['月'] || []).join(', '),
         tuesday: (s.schedule['火'] || []).join(', '),
         wednesday: (s.schedule['水'] || []).join(', '),
@@ -121,7 +123,7 @@ const App: React.FC = () => {
       window.scrollTo(0, 0);
     } catch (error) {
       console.error('Submission error:', error);
-      alert('送信中にエラーが発生しました。');
+      alert('送信中にエラーが発生しました。インターネット接続を確認し、もう一度お試しください。');
     } finally {
       setIsSubmitting(false);
     }
@@ -137,13 +139,14 @@ const App: React.FC = () => {
             </svg>
           </div>
           <h2 className="text-3xl font-black text-slate-800">お申し込みが完了しました</h2>
-          <div className="p-8 bg-blue-50 rounded-[2rem] space-y-4">
+          <div className="p-8 bg-blue-50 rounded-[2rem] space-y-4 border border-blue-100">
             <p className="font-bold text-blue-800">公式LINEの追加をお願いします</p>
-            <a href="https://lin.ee/F09wgIN" target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-5 bg-[#06C755] text-white rounded-2xl font-black text-xl hover:scale-105 transition-all">
+            <p className="text-sm text-blue-600 mb-4">体験レッスンの日程調整などは公式LINEで行います。</p>
+            <a href="https://lin.ee/F09wgIN" target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-5 bg-[#06C755] text-white rounded-2xl font-black text-xl hover:scale-105 transition-all shadow-lg">
               公式LINEを追加する
             </a>
           </div>
-          <button onClick={() => window.location.reload()} className="text-slate-400 font-bold underline">
+          <button onClick={() => window.location.reload()} className="text-slate-400 font-bold underline hover:text-slate-600">
             トップへ戻る
           </button>
         </div>
