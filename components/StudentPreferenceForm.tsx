@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { StudentData, Location, LessonType, Course } from '../types';
 import { DAYS_OF_WEEK, WEEKDAY_TIME_SLOTS, SATURDAY_TIME_SLOTS, KUKI_COURSE_METADATA, KOSHIGAYA_COURSE_METADATA } from '../constants';
 
@@ -48,10 +47,8 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
   const isKoshigaya = globalLocation === Location.KOSHIGAYA;
   const isLockedDay = isKoshigaya && currentDay && currentDay !== '木';
 
-  const activeMetadata = isKoshigaya ? KOSHIGAYA_COURSE_METADATA : KUKI_COURSE_METADATA;
-
-  // Exact Pricing from User Requirements
-  const PRIVATE_PRICING: Record<string, Record<string, Record<string, string>>> = {
+  // Specific Private Pricing requested by user
+  const PRIVATE_PRICING: Record<string, any> = {
     [Location.KUKI]: {
       '30分': { '週1回': '10,000', '月2回': '7,500' },
       '45分': { '週1回': '12,500', '月2回': '9,500' },
@@ -63,6 +60,9 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
       '60分': { '週1回': '19,500', '月2回': '15,500' }
     }
   };
+
+  const activeMetadata = isKoshigaya ? KOSHIGAYA_COURSE_METADATA : KUKI_COURSE_METADATA;
+  const currentMeta = student.course ? activeMetadata[student.course] : null;
 
   const getCourseDisplayName = (course: Course) => {
     if (isKoshigaya && course === Course.TRAILBLAZERS) {
@@ -164,7 +164,6 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
   if (internalStep === 0) {
     const courses = getAvailableCourses();
     const isStep0Valid = student.lessonType && student.course && (student.course !== Course.EIKEN || student.eikenLevel);
-    const currentMeta = student.course ? activeMetadata[student.course] : null;
     const isPrivateRequest = student.lessonType === LessonType.PRIVATE || student.course === Course.PRIVATE_INDIVIDUAL;
 
     return (
@@ -188,7 +187,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
               <button
                 key={type}
                 onClick={() => onUpdate({ lessonType: type, course: undefined })}
-                className={`p-3 rounded-xl border-2 text-sm font-bold transition-all ${student.lessonType === type ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-100 bg-white text-slate-600 hover:border-slate-300'}`}
+                className={`p-4 rounded-xl border-2 text-sm font-bold transition-all ${student.lessonType === type ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-100 bg-white text-slate-600 hover:border-slate-300'}`}
               >
                 {type}
               </button>
@@ -198,43 +197,38 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
 
         {student.lessonType && (
           <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3">コースを選択</h3>
-              {globalLocation && <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{globalLocation}</span>}
-            </div>
-            
+            <h3 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3">コースを選択</h3>
             <div className="grid grid-cols-1 gap-2 mt-4">
               {courses.map((course) => (
                 <button
                   key={course}
                   onClick={() => onUpdate({ course: course })}
-                  className={`p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${student.course === course ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-100 bg-white text-slate-700 hover:border-slate-300'}`}
+                  className={`p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${student.course === course ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-100 bg-white text-slate-700 hover:border-slate-300'}`}
                 >
-                  <span className="font-medium text-sm md:text-base leading-tight">{getCourseDisplayName(course)}</span>
+                  <span className="font-bold text-sm md:text-base leading-tight">{getCourseDisplayName(course)}</span>
+                  {student.course === course && (
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  )}
                 </button>
               ))}
             </div>
 
             {student.course === Course.EIKEN && (
               <div className="mt-8 space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                <div className="flex items-center space-x-2">
-                  <h4 className="font-bold text-slate-800 text-sm">目標とする級を選択してください</h4>
-                  <span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded">必須</span>
-                </div>
+                <h4 className="font-bold text-slate-800 text-sm">目標とする級を選択してください <span className="text-red-600 text-[10px] ml-1">必須</span></h4>
                 <div className="grid grid-cols-3 sm:grid-cols-7 gap-2">
                   {EIKEN_LEVELS.map(level => (
                     <button
                       key={level}
                       onClick={() => onUpdate({ eikenLevel: level })}
-                      className={`py-3 rounded-xl border-2 font-bold text-xs transition-all ${student.eikenLevel === level ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300'}`}
+                      className={`py-3 rounded-xl border-2 font-bold text-xs transition-all ${student.eikenLevel === level ? 'border-blue-600 bg-blue-50 text-blue-700' : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300'}`}
                     >
                       {level}
                     </button>
                   ))}
                 </div>
-                {showError && !student.eikenLevel && (
-                  <p className="text-xs text-red-500 font-bold">級を選択してください。</p>
-                )}
               </div>
             )}
 
@@ -248,22 +242,16 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                 <div className="space-y-6">
                   {isPrivateRequest ? (
                     <div className="space-y-4">
-                      <p className="text-sm text-slate-600 mb-2">※時間と頻度により料金が異なります（詳細は次の画面で表示されます）</p>
+                      <p className="text-sm text-slate-500 mb-2 font-bold">※次の画面で詳しい料金とお時間をお選びいただけます。</p>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {['30分', '45分', '60分'].map(dur => {
                           const prices = globalLocation ? PRIVATE_PRICING[globalLocation][dur] : PRIVATE_PRICING[Location.KUKI][dur];
                           return (
                             <div key={dur} className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                              <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">{dur}</p>
-                              <div className="space-y-1">
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500">週1回:</span>
-                                  <span className="font-black text-black">¥{prices['週1回']}</span>
-                                </div>
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500">月2回:</span>
-                                  <span className="font-black text-slate-700">¥{prices['月2回']}</span>
-                                </div>
+                              <p className="text-[10px] text-slate-500 font-black mb-2">{dur}</p>
+                              <div className="space-y-1 text-xs">
+                                <div className="flex justify-between"><span>週1回:</span><span className="font-black">¥{prices['週1回']}</span></div>
+                                <div className="flex justify-between"><span>月2回:</span><span className="font-black">¥{prices['月2回']}</span></div>
                               </div>
                             </div>
                           );
@@ -274,38 +262,22 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                     (Array.isArray(currentMeta) ? currentMeta : [currentMeta]).map((meta, i) => (
                       <div key={i} className={`space-y-4 ${i > 0 ? 'pt-6 border-t border-slate-100' : ''}`}>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">対象</p>
-                            <p className="text-sm font-bold text-black">{meta.target}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">標準時間</p>
-                            <p className="text-sm font-bold text-black">{meta.duration}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest mb-1">月謝</p>
-                            <p className="text-base font-black text-blue-700">¥{meta.monthlyFee}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">教材費</p>
-                            <p className="text-sm font-bold text-black">¥{meta.materialFee}</p>
-                          </div>
+                          <div><p className="text-[10px] text-slate-400 font-bold mb-1">対象</p><p className="text-sm font-bold">{meta.target}</p></div>
+                          <div><p className="text-[10px] text-slate-400 font-bold mb-1">標準時間</p><p className="text-sm font-bold">{meta.duration}</p></div>
+                          <div><p className="text-[10px] text-blue-600 font-bold mb-1">月謝</p><p className="text-base font-black text-blue-700">¥{meta.monthlyFee}</p></div>
+                          <div><p className="text-[10px] text-slate-400 font-bold mb-1">教材費</p><p className="text-sm font-bold">¥{meta.materialFee}</p></div>
                         </div>
                         {meta.description && (
                           <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50">
-                            <ul className="space-y-1.5">
+                            <ul className="space-y-1">
                               {meta.description.map((line, idx) => (
                                 <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
-                                  <span className="text-blue-500 mt-0.5">•</span>
-                                  <span>{line}</span>
+                                  <span className="text-blue-500 mt-0.5">•</span><span>{line}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
                         )}
-                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-[10px] text-slate-500 italic">
-                          備考: {meta.notes}
-                        </div>
                       </div>
                     ))
                   ) : null}
@@ -316,11 +288,11 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
         )}
 
         <div className="pt-10 flex items-center justify-between">
-          <button onClick={handleBackInternal} className="px-8 py-4 text-slate-500 font-bold hover:text-slate-800 transition-colors">戻る</button>
+          <button onClick={handleBackInternal} className="px-8 py-4 text-slate-500 font-bold">戻る</button>
           <button 
             onClick={handleNextInternal} 
             disabled={!isStep0Valid}
-            className={`px-12 py-4 rounded-2xl font-bold transition-all shadow-xl ${isStep0Valid ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
+            className={`px-12 py-4 rounded-2xl font-bold transition-all shadow-xl ${isStep0Valid ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-400'}`}
           >
             次へ進む
           </button>
@@ -339,10 +311,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
 
     return (
       <div className="p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-300">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-bold text-slate-800">プライベートレッスン設定</h2>
-          <p className="text-slate-500">時間と頻度を選択してください。</p>
-        </div>
+        <h2 className="text-2xl font-bold text-slate-800">プライベートレッスン設定</h2>
 
         <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-8">
           <section className="space-y-6">
@@ -353,11 +322,9 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                   <button
                     key={d}
                     onClick={() => onUpdate({ privateLessonDuration: d })}
-                    className={`p-4 rounded-xl border-2 font-bold transition-all flex flex-col items-center ${
-                      student.privateLessonDuration === d ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
-                    }`}
+                    className={`p-4 rounded-xl border-2 font-bold transition-all ${student.privateLessonDuration === d ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
                   >
-                    <span className="text-lg">{d}</span>
+                    {d}
                   </button>
                 ))}
               </div>
@@ -371,14 +338,10 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                     <button
                       key={f}
                       onClick={() => onUpdate({ privateLessonFrequency: f })}
-                      className={`p-6 rounded-xl border-2 font-bold transition-all text-center ${
-                        student.privateLessonFrequency === f ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
-                      }`}
+                      className={`p-6 rounded-xl border-2 font-bold transition-all text-center ${student.privateLessonFrequency === f ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'}`}
                     >
                       <div className="text-lg mb-1">{f}</div>
-                      <div className="text-sm font-black text-blue-600">
-                        月額: ¥{currentLocPrices[student.privateLessonDuration!][f]}
-                      </div>
+                      <div className="text-sm font-black text-blue-600">月額: ¥{currentLocPrices[student.privateLessonDuration!][f]}</div>
                     </button>
                   ))}
                 </div>
@@ -390,7 +353,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
             <div className="space-y-2 pt-6 border-t border-slate-200">
               <label className="block text-sm font-bold text-slate-700">希望する学習内容 <span className="text-red-600 text-[10px] ml-1">必須</span></label>
               <textarea
-                className="w-full h-32 px-4 py-3 bg-white rounded-xl border-2 border-slate-200 focus:border-blue-600 outline-none transition-all text-black font-medium"
+                className="w-full h-32 px-4 py-3 bg-white rounded-xl border-2 border-slate-200 focus:border-blue-600 outline-none text-black font-medium"
                 placeholder="英検対策を行いたい、など具体的にお知らせください。"
                 value={student.privateNeedsDescription || ''}
                 onChange={(e) => onUpdate({ privateNeedsDescription: e.target.value })}
@@ -400,13 +363,10 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
         </div>
 
         <div className="pt-8 flex items-center justify-between">
-          <button onClick={handleBackInternal} className="px-8 py-4 text-slate-500 font-bold hover:text-slate-800 transition-colors">戻る</button>
+          <button onClick={handleBackInternal} className="px-8 py-4 text-slate-500 font-bold">戻る</button>
           <button 
             onClick={handleNextInternal} 
-            className={`px-12 py-4 rounded-2xl font-bold shadow-lg transition-all ${
-              (needsDesc && isDescriptionEmpty) || !student.privateLessonDuration || !student.privateLessonFrequency 
-              ? 'bg-slate-300 text-white cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
+            className={`px-12 py-4 rounded-2xl font-bold shadow-lg ${(needsDesc && isDescriptionEmpty) || !student.privateLessonDuration || !student.privateLessonFrequency ? 'bg-slate-300 text-white' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
           >
             日時選択へ進む
           </button>
@@ -426,14 +386,14 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
 
       <section className="space-y-6">
         {isSaturday && (
-          <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
-            <p className="text-sm text-amber-700 font-medium">土曜日のレッスンは、通常の受講料に加えて別途1,500円の追加料金がかかります。</p>
+          <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 font-medium text-amber-700 text-sm">
+            土曜日のレッスンは、通常の受講料に加えて別途1,500円の追加料金がかかります。
           </div>
         )}
 
         {isLockedDay ? (
-          <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 text-center">
-            <p className="text-slate-400 font-medium">越谷教室は木曜日のみ開講しております。</p>
+          <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 text-center text-slate-400 font-medium">
+            越谷教室は木曜日のみ開講しております。
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -455,12 +415,12 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
 
       <div className="pt-10 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-4 w-full md:w-auto">
-          <button onClick={handleBackInternal} className="flex-1 md:flex-none px-8 py-4 text-slate-500 font-bold border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors">戻る</button>
-          <button onClick={skipDay} className="flex-1 md:flex-none px-8 py-4 text-blue-600 font-bold border border-blue-100 rounded-2xl hover:bg-blue-50 transition-colors">スキップ</button>
+          <button onClick={handleBackInternal} className="flex-1 md:flex-none px-8 py-4 text-slate-500 font-bold border border-slate-200 rounded-2xl">戻る</button>
+          <button onClick={skipDay} className="flex-1 md:flex-none px-8 py-4 text-blue-600 font-bold border border-blue-100 rounded-2xl">この日をスキップ</button>
         </div>
         <button 
           onClick={handleNextInternal} 
-          className="w-full md:w-auto px-12 py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-xl hover:bg-blue-700 transition-all"
+          className="w-full md:w-auto px-12 py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-xl"
         >
           {internalStep === 6 ? '希望内容を保存' : '次の曜日へ'}
         </button>
