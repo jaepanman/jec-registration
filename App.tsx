@@ -18,10 +18,20 @@ import StepIndicator from './components/StepIndicator';
 
 /**
  * Configuration
- * The URL is now pulled from environment variables for security.
- * In Vercel, add 'GOOGLE_SCRIPT_URL' to your Environment Variables.
+ * Safe check for environment variables to prevent white-page crashes.
  */
-const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL || '';
+const getEnvVar = (name: string): string => {
+  try {
+    // Check for process.env (Standard) or import.meta.env (Vite/Vercel)
+    return (typeof process !== 'undefined' && process.env && process.env[name]) || 
+           (import.meta as any).env?.[name] || 
+           '';
+  } catch (e) {
+    return '';
+  }
+};
+
+const GOOGLE_SCRIPT_URL = getEnvVar('GOOGLE_SCRIPT_URL');
 const SECURITY_TOKEN = 'jec_secure_2024_access';
 
 const INITIAL_FORM_DATA: RegistrationFormData = {
