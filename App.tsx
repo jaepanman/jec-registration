@@ -18,20 +18,10 @@ import StepIndicator from './components/StepIndicator';
 
 /**
  * Configuration
- * Safe check for environment variables to prevent white-page crashes.
+ * Vite requires environment variables to be prefixed with VITE_ to be exposed to the client.
  */
-const getEnvVar = (name: string): string => {
-  try {
-    // Check for process.env (Standard) or import.meta.env (Vite/Vercel)
-    return (typeof process !== 'undefined' && process.env && process.env[name]) || 
-           (import.meta as any).env?.[name] || 
-           '';
-  } catch (e) {
-    return '';
-  }
-};
-
-const GOOGLE_SCRIPT_URL = getEnvVar('GOOGLE_SCRIPT_URL');
+// Fix: Use process.env to access environment variables instead of import.meta.env to resolve TypeScript 'ImportMeta' missing 'env' property error.
+const GOOGLE_SCRIPT_URL = process.env.VITE_GOOGLE_SCRIPT_URL || '';
 const SECURITY_TOKEN = 'jec_secure_2024_access';
 
 const INITIAL_FORM_DATA: RegistrationFormData = {
@@ -103,7 +93,7 @@ const App: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!GOOGLE_SCRIPT_URL) {
-      alert('エラー: Google Apps ScriptのURLが設定されていません。Vercelの環境変数に GOOGLE_SCRIPT_URL を追加してください。');
+      alert('エラー: Google Apps ScriptのURLが設定されていません。Vercelの環境変数に VITE_GOOGLE_SCRIPT_URL を追加してください。');
       return;
     }
 
