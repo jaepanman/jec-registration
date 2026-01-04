@@ -1,6 +1,7 @@
 import React from 'react';
 import { RegistrationFormData, SignupType, Location, Course } from '../types';
 import { DAYS_OF_WEEK } from '../constants';
+import { calculateBaseFee } from '../App';
 
 interface ReviewFormProps {
   formData: RegistrationFormData;
@@ -10,51 +11,7 @@ interface ReviewFormProps {
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ formData, onBack, onSubmit, isSubmitting }) => {
-  
-  const calculateBaseFee = () => {
-    const today = new Date();
-    const month = today.getMonth(); // 0 = Jan
-    const date = today.getDate();
-    const isAfterDec = month === 11 || (month >= 0 && month <= 2);
-
-    if (formData.signupType === SignupType.NEW) {
-      // Logic: 5,000 for the first child, 3,000 for others (2,000 discount per extra sibling)
-      let amount = 5000;
-      let siblingCount = formData.students.length;
-      
-      if (siblingCount > 1) {
-        amount += (siblingCount - 1) * 3000;
-      }
-
-      return { 
-        name: '初回入会金', 
-        amount: amount, 
-        note: siblingCount > 1 
-          ? `(ご兄弟割引適用: 1人目¥5,000 + 2人目以降各¥3,000)` 
-          : (isAfterDec ? '※12月以降の入会につき減額対象となる場合があります。' : '※4月更新時に別途更新料が発生します。')
-      };
-    } else {
-      // Continuing
-      if (formData.location === Location.KUKI) {
-        if (month === 2 && date >= 1) {
-           return { name: '更新料 (遅延登録料込)', amount: 2000 * formData.students.length, note: '※3月1日以降の登録のため、遅延手数料が加算されています。' };
-        } else if (month >= 3) {
-           return { name: '再入会金', amount: 5000 * formData.students.length, note: '※4月1日以降の申請のため、新規入会扱いとなります。' };
-        }
-        return { name: '更新料', amount: 1000 * formData.students.length, note: '※早期更新価格です。' };
-      } else {
-        // Koshigaya
-        if (month === 2 && date >= 1) {
-           return { name: '更新料 (遅延登録料込)', amount: 3500 * formData.students.length, note: '※3月1日以降の登録のため、遅延手数料が加算されています。' };
-        } else if (month >= 3) {
-           return { name: '再入会金', amount: 5000 * formData.students.length, note: '※新規入会扱いとなります。' };
-        }
-        return { name: '更新料', amount: 2500 * formData.students.length, note: '※更新価格です。' };
-      }
-    }
-  };
-
-  const feeInfo = calculateBaseFee();
+  const feeInfo = calculateBaseFee(formData);
 
   return (
     <div className="p-8 space-y-10 animate-in fade-in duration-500">
@@ -75,11 +32,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ formData, onBack, onSubmit, isS
           </div>
         </section>
 
-        <section className="pt-8 space-y-4">
+        <section className="pt-8 space-y-6">
           <h3 className="text-lg font-bold text-slate-800 flex items-center space-x-2">
             <span className="w-1.5 h-6 bg-blue-600 rounded-full" />
             <span>初期費用見積り (概算)</span>
           </h3>
+          
           <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl space-y-6">
             <div className="flex justify-between items-center border-b border-slate-700 pb-4">
               <div className="space-y-1">
@@ -91,6 +49,36 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ formData, onBack, onSubmit, isS
             <div className="text-right">
               <p className="text-xs uppercase tracking-widest text-slate-500 mb-1">合計 (初期登録料)</p>
               <p className="text-4xl font-black text-blue-400">¥{feeInfo.amount.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 border-2 border-blue-200 p-6 rounded-2xl space-y-4">
+            <h4 className="font-black text-blue-800 flex items-center space-x-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>お支払いについてのお願い</span>
+            </h4>
+            <div className="space-y-3 text-sm text-slate-700 leading-relaxed">
+              <p className="font-bold">
+                上記のお支払い合計金額を、本フォーム送信後
+                <span className="text-red-600 underline decoration-2 mx-1 px-1 font-black bg-white rounded">
+                  {feeInfo.deadline}まで
+                </span>
+                に以下の口座へお振込みください。
+              </p>
+              
+              <div className="bg-white p-4 rounded-xl border border-blue-100 text-xs shadow-inner">
+                <p className="font-bold mb-2 text-blue-600">【振込先情報】</p>
+                <div className="grid grid-cols-[80px_1fr] gap-y-1">
+                  <span className="text-slate-400">銀行名:</span> <span className="font-bold">埼玉りそな銀行</span>
+                  <span className="text-slate-400">支店名:</span> <span className="font-bold">久喜支店</span>
+                  <span className="text-slate-400">口座種別:</span> <span className="font-bold">普通</span>
+                  <span className="text-slate-400">口座番号:</span> <span className="font-bold">5900502</span>
+                  <span className="text-slate-400">口座名義:</span> <span className="font-bold">ジェイイーシーエイゴ イーマンジェシーアレン</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-slate-500 italic">※振込手数料はお客様負担となります。お振込みの際は、生徒様のお名前（ご兄弟の場合はお一人のお名前で可）でお願いいたします。</p>
             </div>
           </div>
         </section>
@@ -131,7 +119,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ formData, onBack, onSubmit, isS
       <div className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <button onClick={onBack} className="w-full sm:w-auto px-12 py-4 text-slate-500 font-bold border border-slate-200 rounded-2xl" disabled={isSubmitting}>戻る</button>
         <button onClick={onSubmit} disabled={isSubmitting} className={`w-full sm:w-auto px-20 py-4 rounded-2xl font-bold transition-all shadow-xl ${isSubmitting ? 'bg-slate-400' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
-          {isSubmitting ? '送信中...' : 'お申し込みを確定する'}
+          {isSubmitting ? '送信中...' : '内容を確認して送信する'}
         </button>
       </div>
     </div>

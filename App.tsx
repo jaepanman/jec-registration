@@ -38,6 +38,63 @@ const INITIAL_FORM_DATA: RegistrationFormData = {
   agreedToTerms: false
 };
 
+// Centralized Fee Calculation with updated logic: Late fee starts March 2nd.
+export const calculateBaseFee = (formData: RegistrationFormData) => {
+  const today = new Date();
+  const month = today.getMonth(); // 0 = Jan, 1 = Feb, 2 = Mar, 3 = Apr...
+  const date = today.getDate();
+
+  let amount = 0;
+  let name = '';
+  let note = '';
+  let deadline = '';
+
+  // 1. Determine Payment Deadline
+  // If Jan(0), Feb(1), or Mar(2) -> March 31st. Otherwise -> 20th of month before lessons.
+  if (month <= 2) {
+    deadline = '3月31日';
+  } else {
+    deadline = '受講開始月の前月20日';
+  }
+
+  if (formData.signupType === SignupType.NEW) {
+    // NEW REGISTRATION
+    name = '初回入会金';
+    amount = 5000;
+    const siblingCount = formData.students.length;
+    if (siblingCount > 1) {
+      amount += (siblingCount - 1) * 3000;
+      note = `(ご兄弟割引適用: 1人目¥5,000 + 2人目以降各¥3,000)`;
+    } else {
+      note = month >= 11 || month <= 2 
+        ? '※12月以降の入会につき減額対象となる場合があります。' 
+        : '※4月更新時に別途更新料が発生します。';
+    }
+  } else {
+    // CONTINUING REGISTRATION
+    if (month >= 3) {
+      // April 1st or later: Becomes New Registration / Re-enrollment Fee
+      name = '再入会金';
+      amount = 5000 * formData.students.length;
+      note = '※3月31日を過ぎたため、再入会（新規扱い）となります。';
+    } else if (month === 2 && date >= 2) {
+      // March 2nd to March 31st: Late Fee (+1,000)
+      name = '更新料 (遅延手数料込)';
+      const standard = formData.location === Location.KUKI ? 1000 : 2500;
+      amount = (standard + 1000) * formData.students.length;
+      note = '※3月1日の締切を過ぎたため、遅延手数料(1,000円/名)が加算されています。';
+    } else {
+      // Jan, Feb, or March 1st: Standard / Early Renewal
+      name = '更新料';
+      const standard = formData.location === Location.KUKI ? 1000 : 2500;
+      amount = standard * formData.students.length;
+      note = formData.location === Location.KUKI ? '※更新価格です。' : '※通常更新価格です。';
+    }
+  }
+
+  return { name, amount, note, deadline };
+};
+
 const App: React.FC = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<RegistrationFormData>(INITIAL_FORM_DATA);
@@ -93,15 +150,14 @@ const App: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      // Prepare payload with all fields needed for Google Sheets columns
+      const feeInfo = calculateBaseFee(formData);
+      
       const transformedStudents = formData.students.map(s => ({
         ...s,
-        // Ensure readings are sent clearly
         lastNameFurigana: s.lastNameFurigana || '',
         firstNameFurigana: s.firstNameFurigana || '',
         yearsStudied: s.yearsStudied || '-',
         lastYearLevel: s.lastYearLevel || '-',
-        // Explicit day columns for easier spreadsheet filtering
         monday: (s.schedule['月'] || []).join(', '),
         tuesday: (s.schedule['火'] || []).join(', '),
         wednesday: (s.schedule['水'] || []).join(', '),
@@ -112,11 +168,11 @@ const App: React.FC = () => {
 
       const payload = {
         ...formData,
-        // Include guardian readings and referral name at top level
         lastNameFurigana: formData.lastNameFurigana,
         firstNameFurigana: formData.firstNameFurigana,
         referralName: formData.referralName || '-',
         students: transformedStudents,
+        totalFee: feeInfo.amount,
         token: SECURITY_TOKEN
       };
 
