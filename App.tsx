@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   RegistrationFormData, 
@@ -16,11 +15,6 @@ import ConsentForm from './components/ConsentForm';
 import ReviewForm from './components/ReviewForm';
 import StepIndicator from './components/StepIndicator';
 
-/**
- * Configuration
- * Vite injects environment variables into import.meta.env.
- * Using optional chaining prevents crashes if import.meta.env is undefined.
- */
 const GOOGLE_SCRIPT_URL = (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL || '';
 const SECURITY_TOKEN = 'jec_secure_2024_access';
 
@@ -99,8 +93,22 @@ const App: React.FC = () => {
 
     setIsSubmitting(true);
     try {
+      // Transform the payload to flatten schedules into separate columns for Google Sheets
+      const transformedStudents = formData.students.map(s => {
+        return {
+          ...s,
+          monday: (s.schedule['月'] || []).join(', '),
+          tuesday: (s.schedule['火'] || []).join(', '),
+          wednesday: (s.schedule['水'] || []).join(', '),
+          thursday: (s.schedule['木'] || []).join(', '),
+          friday: (s.schedule['金'] || []).join(', '),
+          saturday: (s.schedule['土'] || []).join(', ')
+        };
+      });
+
       const payload = {
         ...formData,
+        students: transformedStudents,
         token: SECURITY_TOKEN
       };
 
