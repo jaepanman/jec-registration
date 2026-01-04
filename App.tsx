@@ -93,11 +93,15 @@ const App: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      // Prepare payload with explicit fields for Google Sheets
+      // Prepare payload with all fields needed for Google Sheets columns
       const transformedStudents = formData.students.map(s => ({
         ...s,
+        // Ensure readings are sent clearly
+        lastNameFurigana: s.lastNameFurigana || '',
+        firstNameFurigana: s.firstNameFurigana || '',
         yearsStudied: s.yearsStudied || '-',
         lastYearLevel: s.lastYearLevel || '-',
+        // Explicit day columns for easier spreadsheet filtering
         monday: (s.schedule['月'] || []).join(', '),
         tuesday: (s.schedule['火'] || []).join(', '),
         wednesday: (s.schedule['水'] || []).join(', '),
@@ -108,6 +112,10 @@ const App: React.FC = () => {
 
       const payload = {
         ...formData,
+        // Include guardian readings and referral name at top level
+        lastNameFurigana: formData.lastNameFurigana,
+        firstNameFurigana: formData.firstNameFurigana,
+        referralName: formData.referralName || '-',
         students: transformedStudents,
         token: SECURITY_TOKEN
       };
