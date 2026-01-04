@@ -127,7 +127,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
     duration: '60分', 
-    monthlyFee: '12,500 (1名) / 8,500 (2名〜)', 
+    monthlyFee: '8,500 (2名〜)', 
     materialFee: '8,000 + 月々1,000', 
     notes: '1人: 45〜60分 / 2人: 45分 / 3人: 50分',
     description: [
@@ -140,7 +140,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   [Course.TRAILBLAZERS]: { 
     target: '小学生〜中学生', 
     duration: '60分', 
-    monthlyFee: '12,500 (1名) / 8,500 (2名〜)', 
+    monthlyFee: '8,500 (2名〜)', 
     materialFee: '8,000', 
     notes: '1人: 45〜60分 / 2人: 45分 / 3人: 50分',
     description: [
