@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   RegistrationFormData, 
@@ -234,12 +233,24 @@ const App: React.FC = () => {
             </svg>
           </div>
           <h2 className="text-3xl font-black text-slate-800">お申し込みが完了しました</h2>
-          <div className="p-8 bg-blue-50 rounded-[2rem] space-y-4 border border-blue-100">
-            <p className="font-bold text-blue-800">公式LINEの追加をお願いします</p>
-            <p className="text-sm text-blue-600 mb-4">体験レッスンの日程調整などは公式LINEで行います。</p>
+          <div className="p-8 bg-blue-50 rounded-[2rem] space-y-6 border border-blue-100 flex flex-col items-center">
+            <div className="space-y-2">
+              <p className="font-bold text-blue-800">公式LINEの追加をお願いします</p>
+              <p className="text-sm text-blue-600 mb-4">体験レッスンの日程調整などは公式LINEで行います。</p>
+            </div>
+            
             <a href="https://lin.ee/F09wgIN" target="_blank" rel="noopener noreferrer" className="inline-block px-10 py-5 bg-[#06C755] text-white rounded-2xl font-black text-xl hover:scale-105 transition-all shadow-lg">
               公式LINEを追加する
             </a>
+
+            <div className="pt-4 flex flex-col items-center">
+              <p className="text-xs text-slate-400 mb-2">または下のQRコードをスキャン</p>
+              <img 
+                src="https://qr-official.line.me/gs/M_912trfvz_BW.png?oat_content=qr" 
+                alt="LINE QR Code" 
+                className="w-48 h-48 rounded-2xl shadow-md border-4 border-white bg-white" 
+              />
+            </div>
           </div>
           <button onClick={() => window.location.reload()} className="text-slate-400 font-bold underline hover:text-slate-600">
             トップへ戻る
