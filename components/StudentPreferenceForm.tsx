@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { StudentData, Location, LessonType, Course } from '../types';
 import { DAYS_OF_WEEK, WEEKDAY_TIME_SLOTS, SATURDAY_TIME_SLOTS, KUKI_COURSE_METADATA, KOSHIGAYA_COURSE_METADATA } from '../constants';
@@ -199,20 +200,28 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
           <section className="space-y-4">
             <h3 className="text-lg font-bold text-slate-800 border-l-4 border-blue-600 pl-3">コースを選択</h3>
             <div className="grid grid-cols-1 gap-2 mt-4">
-              {courses.map((course) => (
-                <button
-                  key={course}
-                  onClick={() => onUpdate({ course: course })}
-                  className={`p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${student.course === course ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-100 bg-white text-slate-700 hover:border-slate-300'}`}
-                >
-                  <span className="font-bold text-sm md:text-base leading-tight">{getCourseDisplayName(course)}</span>
-                  {student.course === course && (
-                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-              ))}
+              {courses.map((course) => {
+                const isNew = course === Course.TRAILBLAZERS || course === Course.STEAM;
+                return (
+                  <button
+                    key={course}
+                    onClick={() => onUpdate({ course: course })}
+                    className={`p-4 rounded-xl border-2 text-left flex items-center justify-between transition-all ${student.course === course ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-100 bg-white text-slate-700 hover:border-slate-300'}`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span className="font-bold text-sm md:text-base leading-tight">{getCourseDisplayName(course)}</span>
+                      {isNew && (
+                        <span className="px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-black rounded-md animate-pulse whitespace-nowrap">NEW</span>
+                      )}
+                    </div>
+                    {student.course === course && (
+                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
             {student.course === Course.EIKEN && (
@@ -272,11 +281,14 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                             <ul className="space-y-1">
                               {meta.description.map((line, idx) => (
                                 <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
-                                  <span className="text-blue-500 mt-0.5">•</span><span>{line}</span>
+                                  <span className="text-blue-500 mt-0.5">•</span><span className="leading-relaxed">{line}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
+                        )}
+                        {meta.notes && (
+                          <p className="text-[10px] text-slate-500 italic mt-1">{meta.notes}</p>
                         )}
                       </div>
                     ))

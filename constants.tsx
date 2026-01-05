@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Course, Location } from './types';
 
@@ -57,33 +58,55 @@ const PRIVATE_LESSON_DESC = [
   '追加項目には別途教材費が発生する場合があります。詳細はお問い合わせください'
 ];
 
+const TRAILBLAZER_FULL_DESC = [
+  '〜英語で世界を読み解き、自らの道を切り拓く「未来の開拓者」を育てます〜',
+  'ジェシー先生とレニ先生が専任で指導。ナショナルジオグラフィックの最新シリーズ『Trailblazer』を使用。',
+  '4技能に加え、これからの時代に不可欠な「探究心」と「世界とつながる力」を養います。',
+  '【Student Book】美しいビジュアルとトピックで「なぜ？」という問いかけから自分の意見を形成。',
+  '【Workbook】書く力（ライティング）の強化に重点を置き、段階的にスキルアップを図ります。',
+  '【デジタルSpark】動画・音声へのアクセスや、ゲーム感覚で取り組めるオンライン演習を完備。',
+  '【特長】好奇心を刺激する「本物」の教材とデジタル×アナログの相乗効果で、思考力・探究心を育成します。'
+];
+
+const STEAM_POWERED_FULL_DESC = [
+  'Science（科学）・Technology（技術）・Engineering（工学）・Art（芸術）・Mathematics（数学）の5分野を英語で学習。',
+  '実験や工作を通じて「なぜ？」「どうして？」と考える力と、英語での説明力・表現力を自然に習得。',
+  '「浮く・沈む」「光と影」「音のひみつ」「ミニブリッジを作ろう」などの月替わりテーマ。',
+  'ネイティブ講師による英語での探究・実験活動に加え、家庭でできるミニプロジェクトにも挑戦。',
+  '【特長】思考力・表現力・好奇心を育てる構成。※実験材料・工作キットのため毎月別途教材費が発生します。'
+];
+
 const DIFFICULTY_NOTE = 'このコースはキッズ英語よりも難易度が高く、家庭での課題（宿題）に取り組む時間が必要な生徒向けです。';
+
+const GROUP_LESSON_DURATION_NOTE = '2名: 40分 / 3名: 50分 / 4名〜: 60分';
+const KIDS_1_3_DURATION_NOTE = '2名: 35分 / 3名: 40分 / 4名〜: 50分';
+const KIDS_CHAT_DURATION_NOTE = '2名: 30分 / 3名: 35分 / 4名〜: 40分';
 
 export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]> = {
   [Course.KIDS]: [
     { 
-      target: '小学生 0~3年', 
-      duration: '50分', 
+      target: '小学生レベル1〜3', 
+      duration: '35〜50分', 
       monthlyFee: '6,500', 
       materialFee: '8,000', 
-      notes: '2人クラス: 35分 / 3人クラス: 40分',
+      notes: KIDS_1_3_DURATION_NOTE,
       description: KIDS_ENGLISH_DESC
     },
     { 
-      target: '小学生 4~6年', 
-      duration: '60分', 
+      target: '小学生レベル4〜6', 
+      duration: '40〜60分', 
       monthlyFee: '7,500', 
       materialFee: '8,000', 
-      notes: '2人クラス: 40分 / 3人クラス: 50分',
+      notes: GROUP_LESSON_DURATION_NOTE,
       description: KIDS_ENGLISH_DESC
     }
   ],
   [Course.KIDS_CHAT]: { 
     target: '幼稚園児', 
-    duration: '40分', 
+    duration: '30〜40分', 
     monthlyFee: '6,000', 
     materialFee: '8,000', 
-    notes: '2人クラス: 30分 / 3人クラス: 40分',
+    notes: KIDS_CHAT_DURATION_NOTE,
     description: [
       '遊びや音楽を通じて英語に親しむ',
       '挨拶や身近な物の名前を楽しく習得',
@@ -92,10 +115,10 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   },
   [Course.JUNIOR_HIGH_PREP]: { 
     target: '小学校6年生のみ', 
-    duration: '60分', 
+    duration: '40〜60分', 
     monthlyFee: '8,000', 
     materialFee: '7,000', 
-    notes: '2人クラス: 45分 / 3人クラス: 60分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '中学英語へのスムーズな移行をサポート（6年生専用）',
       '文法・語彙・読解・英作文の基礎を習得',
@@ -104,10 +127,10 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   },
   [Course.JUNIOR_HIGH]: { 
     target: '中学生', 
-    duration: '60分', 
+    duration: '40〜60分', 
     monthlyFee: '8,000', 
     materialFee: '8,000', 
-    notes: '2人クラス: 45分 / 3人クラス: 60分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '学校の教科書に準拠した文法・読解力の強化',
       '定期テスト対策と高校入試を見据えた学習'
@@ -115,10 +138,10 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   },
   [Course.EIKEN]: { 
     target: '全学年', 
-    duration: '60分', 
+    duration: '40〜60分', 
     monthlyFee: '8,000', 
     materialFee: '7,000', 
-    notes: '2人クラス: 45分 / 3人クラス: 60分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '英検各級の合格を目指す特化カリキュラム',
       '単語・熟語・文法からリスニング・面接まで網羅'
@@ -126,28 +149,24 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
   },
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
-    duration: '60分', 
-    monthlyFee: '8,500 (2名〜)', 
+    duration: '40〜60分', 
+    monthlyFee: '12,500 (1名) / 8,500 (2名〜)', 
     materialFee: '8,000 + 月々1,000', 
-    notes: '1人: 45〜60分 / 2人: 45分 / 3人: 50分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
-      'ジェシー先生がカリキュラムをデザインしたコースです。',
-      DIFFICULTY_NOTE,
-      '理科・算数・芸術などをテーマにした体験型学習',
-      'ネイティブ講師による英語での探究・実験活動'
+      '【NEW!】' + DIFFICULTY_NOTE,
+      ...STEAM_POWERED_FULL_DESC
     ]
   },
   [Course.TRAILBLAZERS]: { 
     target: '小学生〜中学生', 
-    duration: '60分', 
-    monthlyFee: '8,500 (2名〜)', 
+    duration: '40〜60分', 
+    monthlyFee: '12,500 (1名) / 8,500 (2名〜)', 
     materialFee: '8,000', 
-    notes: '1人: 45〜60分 / 2人: 45分 / 3人: 50分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
-      'レニ先生がカリキュラムをデザインしたコースです。',
-      DIFFICULTY_NOTE,
-      'ナショナルジオグラフィックの教材「Trailblazer」を使用',
-      '世界の文化・環境への探究心と21世紀型スキルを育成'
+      '【NEW!】' + DIFFICULTY_NOTE,
+      ...TRAILBLAZER_FULL_DESC
     ]
   },
   [Course.PRIVATE_INDIVIDUAL]: {
@@ -155,7 +174,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     duration: '30/45/60分',
     monthlyFee: '10,000〜19,500',
     materialFee: '8,000',
-    notes: '30分: 10,000 / 45分: 12,500 / 60分: 19,500',
+    notes: 'マンツーマン（個人）レッスンのため人数による変動なし',
     description: PRIVATE_LESSON_DESC
   },
   [Course.JUNIOR_HIGH_CONV]: {
@@ -171,28 +190,28 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
 export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]> = {
   [Course.KIDS]: [
     { 
-      target: '経験 0~3年', 
-      duration: '50分', 
+      target: '小学生レベル1〜3', 
+      duration: '35〜50分', 
       monthlyFee: '7,500', 
       materialFee: '8,000', 
-      notes: '2名 35分/ 3名 40分/ 4名以上 50分',
+      notes: KIDS_1_3_DURATION_NOTE,
       description: KIDS_ENGLISH_DESC
     },
     { 
-      target: '経験 4~6年', 
-      duration: '60分', 
+      target: '小学生レベル4〜6', 
+      duration: '40〜60分', 
       monthlyFee: '8,500', 
       materialFee: '8,000', 
-      notes: '2名 40分/ 3名 50分/ 4名以上 60分',
+      notes: GROUP_LESSON_DURATION_NOTE,
       description: KIDS_ENGLISH_DESC
     }
   ],
   [Course.KIDS_CHAT]: { 
     target: '幼稚園児', 
-    duration: '40分', 
+    duration: '30〜40分', 
     monthlyFee: '7,000', 
     materialFee: '8,000', 
-    notes: '2名：30分 / 3名以上：40分',
+    notes: KIDS_CHAT_DURATION_NOTE,
     description: [
       '遊びや音楽を通じて英語に親しむ',
       '挨拶や身近な物の名前を楽しく習得',
@@ -201,10 +220,10 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   },
   [Course.JUNIOR_HIGH_PREP]: { 
     target: '小学校6年生のみ', 
-    duration: '60分', 
+    duration: '40〜60分', 
     monthlyFee: '9,500', 
     materialFee: '7,000', 
-    notes: '2名：45分 / 3名以上：60分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '中学英語へのスムーズな移行をサポート',
       '文法・語彙・読解・英作文の基礎を習得'
@@ -212,10 +231,10 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   },
   [Course.JUNIOR_HIGH]: { 
     target: '中学生', 
-    duration: '60分', 
+    duration: '40〜60分', 
     monthlyFee: '9,500', 
     materialFee: '8,000', 
-    notes: '2名：45分 / 3名以上：60分',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '学校の教科書に準拠した文法・読解力の強化',
       '定期テスト対策と高校入試を見据えた学習'
@@ -223,24 +242,24 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   },
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
-    duration: '60分', 
-    monthlyFee: '13,500 (1名) / 9,500 (2名〜)', 
+    duration: '40〜60分', 
+    monthlyFee: '9,500 (2名〜)', 
     materialFee: '8,000 + 月々1,000', 
-    notes: '理科・算数・芸術などをテーマにした体験型学習',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
-      DIFFICULTY_NOTE,
-      'ネイティブ講師による英語での探究・実験活動'
+      '【NEW!】' + DIFFICULTY_NOTE,
+      ...STEAM_POWERED_FULL_DESC
     ]
   },
   [Course.TRAILBLAZERS]: { 
     target: '小学生〜中学生', 
-    duration: '60分', 
-    monthlyFee: '13,500 (1名) / 9,500 (2名〜)', 
+    duration: '40〜60分', 
+    monthlyFee: '9,500 (2名〜)', 
     materialFee: '8,000', 
-    notes: 'ナショナルジオグラフィックの教材「Trailblazer」を使用',
+    notes: GROUP_LESSON_DURATION_NOTE,
     description: [
-      DIFFICULTY_NOTE,
-      '世界の文化・環境への探究心と21世紀型スキルを育成'
+      '【NEW!】' + DIFFICULTY_NOTE,
+      ...TRAILBLAZER_FULL_DESC
     ]
   },
   [Course.PRIVATE_INDIVIDUAL]: {
@@ -248,7 +267,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
     duration: '30/45/60分',
     monthlyFee: '12,500〜19,500',
     materialFee: '別途お問い合わせ',
-    notes: '30分: 12,500 / 45分: 16,500 / 60分: 19,500',
+    notes: 'マンツーマン（個人）レッスンのため人数による変動なし',
     description: PRIVATE_LESSON_DESC
   }
 };
