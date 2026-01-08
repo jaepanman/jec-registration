@@ -117,7 +117,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     target: '小学校6年生のみ', 
     duration: '40〜60分', 
     monthlyFee: '8,000', 
-    materialFee: '7,000', 
+    materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '中学英語へのスムーズな移行をサポート（6年生専用）',
@@ -129,7 +129,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     target: '中学生', 
     duration: '40〜60分', 
     monthlyFee: '8,000', 
-    materialFee: '8,000', 
+    materialFee: '7,100', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '学校の教科書に準拠した文法・読解力の強化',
@@ -140,7 +140,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     target: '全学年', 
     duration: '40〜60分', 
     monthlyFee: '8,000', 
-    materialFee: '7,000', 
+    materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '英検各級の合格を目指す特化カリキュラム',
@@ -181,7 +181,7 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     target: '中学生',
     duration: '30/45/60分',
     monthlyFee: '10,000〜19,500',
-    materialFee: '8,000',
+    materialFee: '6,000',
     notes: '一人ひとりのレベルに合わせた会話重視のレッスン',
     description: PRIVATE_LESSON_DESC
   }
@@ -222,7 +222,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
     target: '小学校6年生のみ', 
     duration: '40〜60分', 
     monthlyFee: '9,500', 
-    materialFee: '7,000', 
+    materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '中学英語へのスムーズな移行をサポート',
@@ -233,7 +233,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
     target: '中学生', 
     duration: '40〜60分', 
     monthlyFee: '9,500', 
-    materialFee: '8,000', 
+    materialFee: '7,100', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
       '学校の教科書に準拠した文法・読解力の強化',
