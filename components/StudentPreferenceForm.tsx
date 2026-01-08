@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { StudentData, Location, LessonType, Course } from '../types';
 import { DAYS_OF_WEEK, WEEKDAY_TIME_SLOTS, SATURDAY_TIME_SLOTS, KUKI_COURSE_METADATA, KOSHIGAYA_COURSE_METADATA } from '../constants';
@@ -165,7 +164,10 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
   if (internalStep === 0) {
     const courses = getAvailableCourses();
     const isStep0Valid = student.lessonType && student.course && (student.course !== Course.EIKEN || student.eikenLevel);
-    const isPrivateRequest = student.lessonType === LessonType.PRIVATE || student.course === Course.PRIVATE_INDIVIDUAL;
+    const isPrivateRequest = student.lessonType === LessonType.PRIVATE || 
+                             student.course === Course.PRIVATE_INDIVIDUAL || 
+                             student.course === Course.ONLINE_CONV ||
+                             student.course === Course.JUNIOR_HIGH_CONV;
 
     return (
       <div className="p-8 space-y-10">
@@ -250,7 +252,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                 
                 <div className="space-y-6">
                   {isPrivateRequest ? (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       <p className="text-sm text-slate-500 mb-2 font-bold">※次の画面で詳しい料金とお時間をお選びいただけます。</p>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {['30分', '45分', '60分'].map(dur => {
@@ -266,6 +268,34 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
                           );
                         })}
                       </div>
+                      
+                      {/* Description for Private Lessons */}
+                      {currentMeta && (
+                        <div className="mt-4 pt-4 border-t border-slate-100">
+                           {(!Array.isArray(currentMeta) && currentMeta.description) && (
+                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50">
+                              <ul className="space-y-1">
+                                {currentMeta.description.map((line, idx) => (
+                                  <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
+                                    <span className="text-blue-500 mt-0.5">•</span><span className="leading-relaxed">{line}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {Array.isArray(currentMeta) && currentMeta[0].description && (
+                            <div className="bg-blue-50/30 p-4 rounded-xl border border-blue-100/50">
+                              <ul className="space-y-1">
+                                {currentMeta[0].description.map((line, idx) => (
+                                  <li key={idx} className="text-xs text-slate-700 flex items-start space-x-2">
+                                    <span className="text-blue-500 mt-0.5">•</span><span className="leading-relaxed">{line}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ) : currentMeta ? (
                     (Array.isArray(currentMeta) ? currentMeta : [currentMeta]).map((meta, i) => (
