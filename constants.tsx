@@ -183,7 +183,12 @@ export const KUKI_COURSE_METADATA: Record<string, CourseDetail | CourseDetail[]>
     monthlyFee: '10,000〜19,500',
     materialFee: '6,000',
     notes: '一人ひとりのレベルに合わせた会話重視のレッスン',
-    description: PRIVATE_LESSON_DESC
+    description: [
+      '対象レベル： キッズ英会話の修了生、または英語を初めて学ぶ中学生',
+      '4技能を網羅： 「話す・聞く・読む・書く」をバランスよく強化',
+      '家庭学習をサポート： デジタルコンテンツ付きの教科書で、自宅でも楽しく復習',
+      '実践的な会話力： 日常のやり取りから特定のテーマまで、使える英語表現を習得'
+    ]
   }
 };
 
