@@ -245,6 +245,17 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
       '定期テスト対策と高校入試を見据えた学習'
     ]
   },
+   [Course.EIKEN]: { 
+    target: '全学年', 
+    duration: '40〜60分', 
+    monthlyFee: '9,500', 
+    materialFee: '5,000', 
+    notes: GROUP_LESSON_DURATION_NOTE,
+    description: [
+      '英検各級の合格を目指す特化カリキュラム',
+      '単語・熟語・文法からリスニング・面接まで網羅'
+    ]
+  },
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
     duration: '40〜60分', 
