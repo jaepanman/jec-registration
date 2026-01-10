@@ -58,6 +58,7 @@ export interface StudentData {
 export interface RegistrationFormData {
   location?: Location;
   signupType?: SignupType;
+  desiredStartMonth?: string;
   referralName?: string;
   lastNameKanji: string;
   firstNameKanji: string;

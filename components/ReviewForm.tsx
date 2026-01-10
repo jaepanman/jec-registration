@@ -27,9 +27,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ formData, onBack, onSubmit, isS
             <span className="w-1.5 h-6 bg-slate-800 rounded-full" />
             <span>お申し込み種別・教室</span>
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12 text-sm bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-12 text-sm bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div><p className="text-slate-400 mb-1">希望教室</p><p className="font-bold text-blue-600">{formData.location}</p></div>
             <div><p className="text-slate-400 mb-1">お申し込みの種類</p><p className="font-bold text-slate-700">{formData.signupType === SignupType.NEW ? '新規入会' : '継続受講'}</p></div>
+            {formData.signupType === SignupType.NEW && (
+              <div><p className="text-slate-400 mb-1">受講開始希望月</p><p className="font-bold text-amber-600">{formData.desiredStartMonth}月</p></div>
+            )}
           </div>
         </section>
 

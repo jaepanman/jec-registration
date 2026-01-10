@@ -52,46 +52,62 @@ export interface FeeSummary {
 }
 
 // Centralized Fee Calculation logic.
-// Late fee for continuing students starts STRICTLY on March 2nd (Deadline March 1st).
 export const calculateFeeSummary = (formData: RegistrationFormData): FeeSummary => {
   const today = new Date();
-  const month = today.getMonth(); // 0 = Jan, 1 = Feb, 2 = Mar, 3 = Apr...
+  const month = today.getMonth(); // 0 = Jan, 1 = Feb... 11 = Dec
   const date = today.getDate();
 
   const items: FeeItem[] = [];
   let deadline = '';
   let globalNote = '';
 
-  // 1. Determine Payment Deadline
-  // If Jan, Feb, or Mar -> March 31st. Otherwise -> 20th of month before.
-  if (month <= 2) {
-    deadline = '3月31日';
-  } else {
-    deadline = '受講開始月の前月20日';
-  }
+  const isKuki = formData.location === Location.KUKI;
 
   if (formData.signupType === SignupType.NEW) {
-    globalNote = month >= 11 || month <= 2 
-      ? '※12月以降の入会につき減額対象となる場合があります。事務局からの連絡をお待ちください。' 
-      : '※4月更新時に別途更新料が発生します。';
+    // Determine the deadline based on desired start month
+    if (formData.desiredStartMonth) {
+      const startMonthInt = parseInt(formData.desiredStartMonth, 10);
+      let deadlineMonth = startMonthInt - 1;
+      if (deadlineMonth === 0) deadlineMonth = 12; // Start Jan -> Deadline Dec 20th
+      deadline = `${deadlineMonth}月20日`;
+    } else {
+      deadline = '受講開始月の前月20日';
+    }
 
-    formData.students.forEach((student, index) => {
-      const name = student.isSelf 
-        ? `${formData.lastNameKanji} ${formData.firstNameKanji}` 
-        : `${student.lastNameKanji} ${student.firstNameKanji}`;
-      
-      const amount = index === 0 ? 5000 : 3000;
-      const label = index === 0 ? '初回入会金' : '初回入会金 (ご兄弟割引)';
-      
-      items.push({ studentName: name, label, amount });
-    });
+    // Special 4th Term Rule: Submitted in Dec, Jan, Feb (month 11, 0, 1) 
+    // AND starting in Jan, Feb, Mar (desiredStartMonth 1, 2, 3)
+    const isSpecialFourthTerm = (month === 11 || month === 0 || month === 1) && 
+                                (formData.desiredStartMonth === '1' || formData.desiredStartMonth === '2' || formData.desiredStartMonth === '3');
+
+    if (isSpecialFourthTerm) {
+      globalNote = '※第4期（1月〜3月）入会特別価格（¥1,000）が適用されています。';
+      formData.students.forEach((student) => {
+        const name = student.isSelf 
+          ? `${formData.lastNameKanji} ${formData.firstNameKanji}` 
+          : `${student.lastNameKanji} ${student.firstNameKanji}`;
+        items.push({ studentName: name, label: '入会金 (第4期特別価格)', amount: 1000 });
+      });
+    } else {
+      globalNote = (month >= 11 || month <= 2) 
+        ? '※12月以降の入会につき減額対象となる場合があります。事務局からの連絡をお待ちください。' 
+        : '※4月更新時に別途更新料が発生します。';
+
+      formData.students.forEach((student, index) => {
+        const name = student.isSelf 
+          ? `${formData.lastNameKanji} ${formData.firstNameKanji}` 
+          : `${student.lastNameKanji} ${student.firstNameKanji}`;
+        
+        const amount = index === 0 ? 5000 : 3000;
+        const label = index === 0 ? '初回入会金' : '初回入会金 (ご兄弟割引)';
+        
+        items.push({ studentName: name, label, amount });
+      });
+    }
   } else {
     // CONTINUING REGISTRATION
-    const isKuki = formData.location === Location.KUKI;
-    const baseAmount = isKuki ? 1000 : 2500;
-    
     if (month >= 3) {
-      // April 1st or later
+      // April 1st or later: Considered new registration
+      deadline = '受講開始月の前月20日';
       globalNote = '※3月31日を過ぎたため、再入会（新規扱い）となります。';
       formData.students.forEach(student => {
         const name = student.isSelf 
@@ -100,8 +116,10 @@ export const calculateFeeSummary = (formData: RegistrationFormData): FeeSummary 
         items.push({ studentName: name, label: '再入会金', amount: 5000 });
       });
     } else if (month === 2 && date >= 2) {
-      // March 2nd to March 31st (Late fee starts March 2nd)
+      // March 2nd to March 31st: Late fee starts March 2nd
+      deadline = '3月31日';
       globalNote = '※3月1日の締切を過ぎたため、遅延手数料が加算されています。';
+      const baseAmount = isKuki ? 1000 : 2500;
       formData.students.forEach(student => {
         const name = student.isSelf 
           ? `${formData.lastNameKanji} ${formData.firstNameKanji}` 
@@ -109,8 +127,10 @@ export const calculateFeeSummary = (formData: RegistrationFormData): FeeSummary 
         items.push({ studentName: name, label: '更新料 (+遅延手数料 ¥1,000)', amount: baseAmount + 1000 });
       });
     } else {
-      // Jan, Feb, or March 1st
+      // Up until and including March 1st (Jan, Feb, March 1st)
+      deadline = '3月31日';
       globalNote = isKuki ? '※早期更新価格です。' : '※通常更新価格です。';
+      const baseAmount = isKuki ? 1000 : 2500;
       formData.students.forEach(student => {
         const name = student.isSelf 
           ? `${formData.lastNameKanji} ${formData.firstNameKanji}` 
@@ -201,6 +221,7 @@ const App: React.FC = () => {
         lastNameFurigana: formData.lastNameFurigana,
         firstNameFurigana: formData.firstNameFurigana,
         referralName: formData.referralName || '-',
+        desiredStartMonth: formData.desiredStartMonth || '-',
         students: transformedStudents,
         totalFee: summary.totalAmount,
         token: SECURITY_TOKEN

@@ -7,8 +7,10 @@ interface SignupTypeFormProps {
   onNext: () => void;
 }
 
+const START_MONTHS = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+
 const SignupTypeForm: React.FC<SignupTypeFormProps> = ({ formData, updateFormData, onNext }) => {
-  const isFormValid = !!formData.location && !!formData.signupType;
+  const isFormValid = !!formData.location && !!formData.signupType && (formData.signupType === SignupType.CONTINUING || !!formData.desiredStartMonth);
 
   return (
     <div className="p-8 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -96,7 +98,7 @@ const SignupTypeForm: React.FC<SignupTypeFormProps> = ({ formData, updateFormDat
           </button>
 
           <button
-            onClick={() => updateFormData({ signupType: SignupType.CONTINUING, referralName: '' })}
+            onClick={() => updateFormData({ signupType: SignupType.CONTINUING, referralName: '', desiredStartMonth: undefined })}
             className={`relative p-8 rounded-3xl border-2 text-left transition-all duration-300 group ${
               formData.signupType === SignupType.CONTINUING
                 ? 'border-green-600 bg-green-50 shadow-xl ring-4 ring-green-100'
@@ -128,28 +130,66 @@ const SignupTypeForm: React.FC<SignupTypeFormProps> = ({ formData, updateFormDat
       </section>
 
       {formData.signupType === SignupType.NEW && (
-        <div className="animate-in fade-in zoom-in duration-300 p-6 bg-slate-800 rounded-3xl border border-slate-700 shadow-inner space-y-4">
-          <div className="flex items-start space-x-4">
-            <div className="bg-amber-500 p-2 rounded-xl text-white mt-1">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-              </svg>
+        <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
+          <section className="space-y-6">
+            <h3 className="text-xl font-bold text-slate-800 border-l-4 border-blue-600 pl-3">3. 受講開始希望月 (Desired Start Month)</h3>
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+              {START_MONTHS.map(month => (
+                <button
+                  key={month}
+                  onClick={() => updateFormData({ desiredStartMonth: month })}
+                  className={`p-4 rounded-xl border-2 font-bold transition-all text-center ${
+                    formData.desiredStartMonth === month
+                      ? 'border-blue-600 bg-blue-50 text-blue-800 shadow-md ring-2 ring-blue-100'
+                      : 'border-slate-100 bg-white text-slate-500 hover:border-blue-200'
+                  }`}
+                >
+                  {month}月
+                </button>
+              ))}
             </div>
-            <div className="space-y-1">
-              <h4 className="text-white font-bold">ご紹介キャンペーン実施中！</h4>
-              <p className="text-slate-300 text-sm">
-                当教室をご紹介いただいた方の氏名をご入力ください。ご紹介者様に<span className="text-amber-400 font-bold">1,000円分のAmazonギフトカード</span>をプレゼントいたします。
-              </p>
+
+            <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-2xl shadow-sm">
+              <div className="flex items-start space-x-3">
+                <svg className="w-6 h-6 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div className="space-y-2">
+                  <h4 className="text-red-800 font-bold text-lg">【重要】お申し込み・お支払い期限について</h4>
+                  <p className="text-red-700 text-sm leading-relaxed">
+                    受講開始を希望される月の<strong>前月20日まで</strong>に、本フォームの送信および入会金のお支払いを完了していただく必要があります。
+                  </p>
+                  <p className="bg-white/50 p-2 rounded-lg text-red-800 text-xs font-bold italic">
+                    例：6月からの受講をご希望の場合、<strong>5月20日まで</strong>にお手続きを完了してください。
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="ご紹介者様のお名前"
-              className="w-full px-6 py-4 bg-slate-900 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:ring-2 focus:ring-amber-500 outline-none transition-all"
-              value={formData.referralName || ''}
-              onChange={(e) => updateFormData({ referralName: e.target.value })}
-            />
+          </section>
+
+          <div className="animate-in fade-in zoom-in duration-300 p-6 bg-slate-800 rounded-3xl border border-slate-700 shadow-inner space-y-4">
+            <div className="flex items-start space-x-4">
+              <div className="bg-amber-500 p-2 rounded-xl text-white mt-1">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-white font-bold">ご紹介キャンペーン実施中！</h4>
+                <p className="text-slate-300 text-sm">
+                  当教室をご紹介いただいた方の氏名をご入力ください。ご紹介者様に<span className="text-amber-400 font-bold">1,000円分のAmazonギフトカード</span>をプレゼントいたします。
+                </p>
+              </div>
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="ご紹介者様のお名前"
+                className="w-full px-6 py-4 bg-slate-900 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                value={formData.referralName || ''}
+                onChange={(e) => updateFormData({ referralName: e.target.value })}
+              />
+            </div>
           </div>
         </div>
       )}
