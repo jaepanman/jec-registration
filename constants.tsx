@@ -316,15 +316,17 @@ export const KUKI_TERMS = (
       <h5 className="font-bold text-lg border-b-2 border-blue-600 pb-1">その他</h5>
       <div className="grid grid-cols-1 gap-3 text-xs">
         <p>① すべての講座は、年間プログラムで行います。月3回遊んでも月5回でも月謝は同じです。</p>
-        <p>② 原則として１年間同じ曜日と時間で行います。</p>
+        <p>② 原則としてレッスンは１年間同じ曜日と時間で行います。</p>
         <p>③ クラスの在籍人数が減少した場合は、料金表に基づき<span className="font-bold underline">レッスン時間も短縮されます</span>。</p>
-        <p>④ 祝祭日、久喜市の提燈祭り、春・夏・冬休みは原則レッスンを行いません。</p>
+        <p>④ 祝日、久喜市の提燈祭り、春・夏・冬休みは原則レッスンを行いません。</p>
         <div className="p-3 bg-red-50 rounded-lg border border-red-100 space-y-1">
           <p className="font-bold text-red-800 underline text-sm">各種諸費用について</p>
           <p>⑥ <b>管理費:</b> 年2回（9月と12月）に<span className="font-bold text-red-600">2,000円</span>を集金します。ご兄弟割引が適用されます。</p>
           <p>⑦ <b>イベント費:</b> 季節のイベント<span className="font-bold text-red-600">1,000〜1,500円</span>、発表会<span className="font-bold text-red-600">1,000円</span>を集めます。</p>
           <p>⑧ <b>絵本費用:</b> 発表会で使用する英語絵本の代金として、11月に<span className="font-bold text-red-600">1,000円</span>を請求いたします。</p>
-          <p>⑨ <b>事業運営費用:</b> 月額<span className="font-bold text-blue-600">350円</span>が発生いたします。</p>
+          <p>⑨ <b>入退室カード:</b> 入退室カードを紛失した場合、または2回連続で持参しなかった場合、<span className="font-bold text-red-600">500円</span>の再発行手数料を請求します。</p>
+          <p>⑩ <b>事業運営費用:</b> 月額<span className="font-bold text-blue-600">350円</span>が発生いたします。</p>
+          <p>⑪ <b>再入会規定:</b> 年間を通しての途中退会や一時休止後の再開に際し、再入会される場合は、<span className="font-bold text-red-600">2,000円</span>の再入会金が発生いたします。</p>
         </div>
       </div>
     </section>
