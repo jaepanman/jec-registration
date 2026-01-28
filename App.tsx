@@ -208,6 +208,7 @@ const App: React.FC = () => {
         firstNameFurigana: s.firstNameFurigana || '',
         yearsStudied: s.yearsStudied || '-',
         lastYearLevel: s.lastYearLevel || '-',
+        privateNeedsDescription: s.privateNeedsDescription || '-',
         monday: (s.schedule['月'] || []).join(', '),
         tuesday: (s.schedule['火'] || []).join(', '),
         wednesday: (s.schedule['水'] || []).join(', '),
