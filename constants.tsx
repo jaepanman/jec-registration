@@ -226,7 +226,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.JUNIOR_HIGH_PREP]: { 
     target: '小学校6年生のみ', 
     duration: '40〜60分', 
-    monthlyFee: '9,500', 
+    monthlyFee: '8,500', 
     materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -237,7 +237,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.JUNIOR_HIGH]: { 
     target: '中学生', 
     duration: '40〜60分', 
-    monthlyFee: '9,500', 
+    monthlyFee: '8,500', 
     materialFee: '7,100', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -248,7 +248,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
    [Course.EIKEN]: { 
     target: '全学年', 
     duration: '40〜60分', 
-    monthlyFee: '9,500', 
+    monthlyFee: '8,500', 
     materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -259,7 +259,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
     duration: '40〜60分', 
-    monthlyFee: '9,500', 
+    monthlyFee: '8,500', 
     materialFee: '8,000 + 月々1,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -270,7 +270,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.TRAILBLAZERS]: { 
     target: '小学生〜中学生', 
     duration: '40〜60分', 
-    monthlyFee: '9,500', 
+    monthlyFee: '8,500', 
     materialFee: '8,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -281,7 +281,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.PRIVATE_INDIVIDUAL]: {
     target: '全学年',
     duration: '30/45/60分',
-    monthlyFee: '12,500〜19,500',
+    monthlyFee: '11,500〜19,500',
     materialFee: '別途お問い合わせ',
     notes: 'マンツーマン（個人）レッスンのため人数による変動なし',
     description: PRIVATE_LESSON_DESC
