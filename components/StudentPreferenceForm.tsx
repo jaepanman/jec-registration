@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { StudentData, Location, LessonType, Course } from '../types';
-import { DAYS_OF_WEEK, WEEKDAY_TIME_SLOTS, SATURDAY_TIME_SLOTS, KUKI_COURSE_METADATA, KOSHIGAYA_COURSE_METADATA } from '../constants';
+import { DAYS_OF_WEEK, WEEKDAY_TIME_SLOTS, SATURDAY_TIME_SLOTS, KUKI_COURSE_METADATA, KOSHIGAYA_COURSE_METADATA, KOSHIGAYA_DAYS } from '../constants';
 
 interface StudentPreferenceFormProps {
   student: StudentData;
@@ -45,7 +45,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
   const currentDay = internalStep >= 1 && internalStep <= 6 ? DAYS_OF_WEEK[Math.floor(internalStep) - 1] : null;
   const isSaturday = currentDay === '土';
   const isKoshigaya = globalLocation === Location.KOSHIGAYA;
-  const isLockedDay = isKoshigaya && currentDay && currentDay !== '木';
+  const isLockedDay = isKoshigaya && currentDay && !KOSHIGAYA_DAYS.includes(currentDay);
 
   // Specific Private Pricing requested by user
   const PRIVATE_PRICING: Record<string, any> = {
@@ -55,8 +55,8 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
       '60分': { '週1回': '19,500', '月2回': '15,000' }
     },
     [Location.KOSHIGAYA]: {
-      '30分': { '週1回': '11,500', '月2回': '7,250' },
-      '45分': { '週1回': '15,500', '月2回': '12,500' },
+      '30分': { '週1回': '13,000', '月2回': '9,500' },
+      '45分': { '週1回': '16,500', '月2回': '12,500' },
       '60分': { '週1回': '19,500', '月2回': '15,500' }
     }
   };
@@ -435,7 +435,7 @@ const StudentPreferenceForm: React.FC<StudentPreferenceFormProps> = ({
 
         {isLockedDay ? (
           <div className="p-8 bg-slate-50 rounded-xl border border-slate-200 text-center text-slate-400 font-medium">
-            越谷教室は木曜日のみ開講しております。
+            越谷教室は月曜日と木曜日のみ開講しております。
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
