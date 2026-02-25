@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Course, Location } from './types';
 
 export const DAYS_OF_WEEK = ['月', '火', '水', '木', '金', '土'];
-export const KOSHIGAYA_DAYS = ['木'];
+export const KOSHIGAYA_DAYS = ['月', '木'];
 
 export const WEEKDAY_TIME_SLOTS = [
   '16:30', '17:00', '17:30', '18:00', '18:30', 
@@ -226,7 +225,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.JUNIOR_HIGH_PREP]: { 
     target: '小学校6年生のみ', 
     duration: '40〜60分', 
-    monthlyFee: '8,500', 
+    monthlyFee: '9,500', 
     materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -237,7 +236,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.JUNIOR_HIGH]: { 
     target: '中学生', 
     duration: '40〜60分', 
-    monthlyFee: '8,500', 
+    monthlyFee: '9,500', 
     materialFee: '7,100', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -245,10 +244,10 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
       '定期テスト対策と高校入試を見据えた学習'
     ]
   },
-   [Course.EIKEN]: { 
+  [Course.EIKEN]: { 
     target: '全学年', 
     duration: '40〜60分', 
-    monthlyFee: '8,500', 
+    monthlyFee: '9,500', 
     materialFee: '5,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -259,7 +258,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.STEAM]: { 
     target: '小学生〜中学生', 
     duration: '40〜60分', 
-    monthlyFee: '8,500', 
+    monthlyFee: '9,500', 
     materialFee: '8,000 + 月々1,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -270,7 +269,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.TRAILBLAZERS]: { 
     target: '小学生〜中学生', 
     duration: '40〜60分', 
-    monthlyFee: '8,500', 
+    monthlyFee: '9,500', 
     materialFee: '8,000', 
     notes: GROUP_LESSON_DURATION_NOTE,
     description: [
@@ -281,7 +280,7 @@ export const KOSHIGAYA_COURSE_METADATA: Record<string, CourseDetail | CourseDeta
   [Course.PRIVATE_INDIVIDUAL]: {
     target: '全学年',
     duration: '30/45/60分',
-    monthlyFee: '11,500〜19,500',
+    monthlyFee: '12,500〜19,500',
     materialFee: '別途お問い合わせ',
     notes: 'マンツーマン（個人）レッスンのため人数による変動なし',
     description: PRIVATE_LESSON_DESC
@@ -313,7 +312,7 @@ export const KUKI_TERMS = (
       <p>授業料お支払いは、埼玉りそな銀行指定口座あての振り込みをお願いしております。</p>
       <div className="bg-white p-4 rounded-xl border-2 border-blue-100 space-y-2">
         <p className="font-bold text-blue-800 underline">お支払い期限と遅延手数料</p>
-        <p>毎月20日に翌月分のご請求書を発行いたします。お支払いは<b>月末まで</b>にお振込みをお願いいたします。</p>
+        <p>毎月20日に翌月分のご請求書を発入いたします。お支払いは<b>月末まで</b>にお振込みをお願いいたします。</p>
         <p>なお、<span className="text-red-600 font-bold">翌月5日が最終お支払い期限</span>となります。6日以降のご入金は遅延扱いとなり、<span className="text-red-600 font-bold underline">1,000円の遅延手数料</span>を申し受けます。</p>
       </div>
       <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
