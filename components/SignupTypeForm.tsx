@@ -58,7 +58,7 @@ const SignupTypeForm: React.FC<SignupTypeFormProps> = ({ formData, updateFormDat
                   </div>
                 )}
               </div>
-              <p className="text-xs text-slate-500">{loc === Location.KUKI ? '月〜土 受付中' : '木曜日のみ受付中'}</p>
+              <p className="text-xs text-slate-500">{loc === Location.KUKI ? '月〜土 受付中' : '月・木 受付中'}</p>
             </button>
           ))}
         </div>
